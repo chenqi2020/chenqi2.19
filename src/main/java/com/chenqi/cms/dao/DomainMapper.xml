@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.chenqi.cms.dao.DomainMapper">
+	
+	
+		<resultMap type="Domain" id="domainmap">
+		<id column="did" property="did" />
+		<result column="text" property="text" />
+		<result column="url" property="url" />
+		<result column="user_id" property="user_id" />
+		<result column="created" property="created" />
+		
+		<association property="user" javaType="User"
+			select="com.chenqi.cms.dao.UserMapper.selectByPrimaryKey"
+			column="user_id">
+			</association>
+			<association property="article" javaType="Article"
+			select="com.chenqi.cms.dao.ArticleMapper.selectByPrimaryKey"
+			column="article_id"></association>
+		</resultMap>
+		<select id="list" resultMap="domainmap" >
+			select * from cms_domain
+			<!-- 排序 -->
+         <if test="(orderName!=null and orderName!='') and orderMethod!=null and  orderName!=''">
+          	order by ${orderName} ${orderMethod}
+         </if>
+		</select>
+		<delete id="dele">
+			delete from cms_domain where did=#{did}
+		</delete>
+		<insert id="add">
+		insert into
+		cms_domain(text,url,user_id,created)
+		values(#{text},#{url},#{user_id},now())
+
+	</insert>
+			
+	</mapper>
